@@ -47,25 +47,25 @@ def generate_code(data_name, model_name, train=0):
        data2 = data['train']
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
-        if model== 'gpt4o':
-                API_Key=input("Please enter your API key")
-                client = OpenAI(api_key=API_Key)
-                message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
-                temperature=0.2
-                max_tokens=1000
-                frequency_penalty=0.0
-                response = client.chat.completions.create(
-                model="gpt4o",
-                messages = message,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                frequency_penalty=frequency_penalty
-                )
-                res=response.choices[0].message.content
-                try:
-                    code_block = re.search(r"```python(.*?)```", res, re.DOTALL).group(1).strip()
-                except:
-                    code_block = res
+        if model == 'gpt4o':
+            API_Key=input("Please enter your API key")
+            client = OpenAI(api_key=API_Key)
+            message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
+            temperature=0.2
+            max_tokens=1000
+            frequency_penalty=0.0
+            response = client.chat.completions.create(
+            model="gpt4o",
+            messages = message,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            frequency_penalty=frequency_penalty
+            )
+            res=response.choices[0].message.content
+            try:
+                code_block = re.search(r"```python(.*?)```", res, re.DOTALL).group(1).strip()
+            except:
+                code_block = res
         elif model == "gpt-3.5-turbo":
                 API_Key=input("Please enter your API key")
                 client = OpenAI(api_key=API_Key)

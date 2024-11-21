@@ -1,7 +1,8 @@
+import re
 from datasets import load_dataset
 import os
 from openai import OpenAI
-client = OpenAI(api_key='API-Key')
+#client = OpenAI(api_key='API-Key')
 #llama 3 login:
 #huggingface-cli login
 import transformers
@@ -19,6 +20,8 @@ def load_data(name):
         data = load_dataset("mbpp", "sanitized")
     elif name == 'leetcode':
         data = load_dataset("greengerong/leetcode")
+    else:
+        raise ValueError("Unsupported dataset name")
     return data
 
 def load_model(name):
@@ -28,9 +31,13 @@ def load_model(name):
        model = "gpt-3.5-turbo"
     elif name == "llama3.1":
        model = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+    else:
+        raise ValueError("Unsupported model name")
     return model   
 
-def generate_code(data, model, train=0):
+def generate_code(data_name, model_name, train=0):
+   data= load_data(data_name)
+   model= load_model(model_name)
    codes=[]
    assistant_prompt= "Please complete this Python function."
    if train==0:
@@ -41,6 +48,8 @@ def generate_code(data, model, train=0):
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
         if model== 'gpt4o':
+                API_Key=input("Please enter your API key")
+                client = OpenAI(api_key=API_Key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -58,6 +67,8 @@ def generate_code(data, model, train=0):
                 except:
                     code_block = res
         elif model == "gpt-3.5-turbo":
+                API_Key=input("Please enter your API key")
+                client = OpenAI(api_key=API_Key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -75,6 +86,10 @@ def generate_code(data, model, train=0):
                 except:
                     code_block = res
         elif model == "meta-llama/Meta-Llama-3.1-8B-Instruct":
+                # Ensure you have already authenticated with Hugging Face CLI
+                # Run `huggingface-cli login` in your terminal before running this script
+                #llama 3 login
+                #huggingface-cli login
                 pipeline = transformers.pipeline(
                 "text-generation",
                 model=model,
@@ -104,6 +119,8 @@ def generate_code(data, model, train=0):
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
         if model== 'gpt4o':
+                API_Key=input("Please enter your API key")
+                client = OpenAI(api_key=API_Key)                
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -121,6 +138,8 @@ def generate_code(data, model, train=0):
                 except:
                     code_block = res
         elif model == "gpt-3.5-turbo":
+                API_Key=input("Please enter your API key")
+                client = OpenAI(api_key=API_Key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -138,6 +157,10 @@ def generate_code(data, model, train=0):
                 except:
                     code_block = res
         elif model == "meta-llama/Meta-Llama-3.1-8B-Instruct":
+                # Ensure you have already authenticated with Hugging Face CLI
+                # Run `huggingface-cli login` in your terminal before running this script
+                #llama 3 login
+                #huggingface-cli login                
                 pipeline = transformers.pipeline(
                 "text-generation",
                 model=model,
@@ -179,10 +202,11 @@ def generate_test_cases(function_name, context):
 
     return test_cases
 
-def oringinal_test_cases(data):
+def oringinal_test_cases(data_name):
+    data= load_data(data_name)
     final_test_cases = []
     if data == load_dataset('openai_humaneval'):
-        for a_test in human_eval['test']:
+        for a_test in data['test']:
             method_names = re.findall('def .*\(', a_test['prompt'])
             if len(method_names) == 2:
                 method_name = method_names[1]
@@ -192,15 +216,18 @@ def oringinal_test_cases(data):
             test = a_test['test'] + '\ncheck(' + method_name + ')'
             final_test_cases.append(test)
     elif data == load_dataset("greengerong/leetcode"):
-        for i in range(len(Lcode['train']['content'])):
-            example = Lcode['train']['content'][i]
+        for i in range(len(data['train']['content'])):
+            example = data['train']['content'][i]
 
             function_name = "function_name"
             test_case = generate_test_cases(function_name, example)
             final_test_cases.append(test_case)
+    
+    return final_test_cases
 
 
-def evaluation(data, testcases, code):
+def evaluation(data_name, testcases, code):
+    data= load_data(data_name)
     accuracy=[]
     if data == load_dataset('openai_humaneval'):
         for j in range(len(data['test'])):
@@ -211,10 +238,10 @@ def evaluation(data, testcases, code):
             else:
                 accuracy.append(0)
     elif data == load_dataset("mbpp", "sanitized"):
-        len_test=len(mbpp['train']['test_list'][j])
+        len_test=len(data['train']['test_list'][j])
         p=0
-        for test in mbpp['train']['test_list'][j]:
-            pass_at_k, results = code_eval_metric.compute(references=[testcases[j]], predictions=[[code[j]]], k=[1])
+        for test in data['train']['test_list'][j]:
+            pass_at_k, results = code_eval_metric.compute(references=[test], predictions=[[code[j]]], k=[1])
             p+=pass_at_k['pass@1']
         if p==len_test:
             accuracy.append(1)
@@ -233,5 +260,5 @@ def evaluation(data, testcases, code):
                     accuracy.append(0)
         except:
             accuracy.append(0)
-    return accuracy    
+    return accuracy  
 

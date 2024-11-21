@@ -12,8 +12,8 @@ import seaborn as sns
 
 from complexity_accuracy import *
 
-def correlation_score(data, testcases, codes, feature_selection=0):
-    df= compute_complexity(data, testcases, codes)
+def correlation_score(data_name, testcases, codes, feature_selection=0):
+    df= compute_complexity(data_name, testcases, codes)
     X = df.drop('accuracy', axis=1)
     y = df['accuracy']
     if feature_selection==0:
@@ -79,8 +79,8 @@ def correlation_score(data, testcases, codes, feature_selection=0):
 
         return scores.mean()
 
-def distribution(data, testcases, codes):
-    df= compute_complexity(data, testcases, codes)
+def distribution(data_name, testcases, codes):
+    df= compute_complexity(data_name, testcases, codes)
     X = df.drop('accuracy', axis=1)
     y = df['accuracy']
 
@@ -124,4 +124,4 @@ def distribution(data, testcases, codes):
 
         # Show the plot
         plt.show()
-    '''    
+    '''  

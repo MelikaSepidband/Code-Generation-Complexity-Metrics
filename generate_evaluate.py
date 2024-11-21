@@ -41,13 +41,13 @@ def generate_code(data_name, model_name, train=0):
    codes=[]
    assistant_prompt= "Please complete this Python function."
    if train==0:
-    if data == load_dataset('openai_humaneval') or data == load_dataset("mbpp", "sanitized"):
+    if data_name == 'HumanEval' or data_name == 'mbpp':
        data2= data['test']
-    elif data == load_dataset("greengerong/leetcode"):
+    elif data_name == 'leetcode':
        data2 = data['train']
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
-        if model == 'gpt4o':
+        if model== 'gpt4o':
             API_Key=input("Please enter your API key")
             client = OpenAI(api_key=API_Key)
             message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
@@ -205,7 +205,7 @@ def generate_test_cases(function_name, context):
 def oringinal_test_cases(data_name):
     data= load_data(data_name)
     final_test_cases = []
-    if data == load_dataset('openai_humaneval'):
+    if data_name == 'HumanEval':
         for a_test in data['test']:
             method_names = re.findall('def .*\(', a_test['prompt'])
             if len(method_names) == 2:
@@ -215,7 +215,7 @@ def oringinal_test_cases(data_name):
             method_name = method_name.replace('def ', '').replace('(', '')
             test = a_test['test'] + '\ncheck(' + method_name + ')'
             final_test_cases.append(test)
-    elif data == load_dataset("greengerong/leetcode"):
+    elif data_name == 'leetcode':
         for i in range(len(data['train']['content'])):
             example = data['train']['content'][i]
 
@@ -229,7 +229,7 @@ def oringinal_test_cases(data_name):
 def evaluation(data_name, testcases, code):
     data= load_data(data_name)
     accuracy=[]
-    if data == load_dataset('openai_humaneval'):
+    if data_name == 'HumanEval':
         for j in range(len(data['test'])):
             pass_at_k, results = code_eval_metric.compute(references=[testcases[j]], predictions=[[code[j]]], k=[1])
             p=pass_at_k['pass@1']
@@ -237,7 +237,7 @@ def evaluation(data_name, testcases, code):
                 accuracy.append(1)
             else:
                 accuracy.append(0)
-    elif data == load_dataset("mbpp", "sanitized"):
+    elif data_name == 'mbpp':
         len_test=len(data['train']['test_list'][j])
         p=0
         for test in data['train']['test_list'][j]:
@@ -247,7 +247,7 @@ def evaluation(data_name, testcases, code):
             accuracy.append(1)
         else:
             accuracy.append(0)
-    elif data == load_dataset("greengerong/leetcode"):
+    elif data_name == 'leetcode':
         try:
             len_test=len(testcases[j])
             p=0
@@ -260,5 +260,4 @@ def evaluation(data_name, testcases, code):
                     accuracy.append(0)
         except:
             accuracy.append(0)
-    return accuracy  
-
+    return accuracy    

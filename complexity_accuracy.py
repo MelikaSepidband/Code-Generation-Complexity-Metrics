@@ -1,6 +1,7 @@
+import pandas as pd
 from Complexity_metrics import *
 from generate_evaluate import *
-def compute_complexity(data, testcases, codes):
+def compute_complexity(data_name, testcases, codes):
     complexity2=[]
     vocabulary2=[]
     length2=[]
@@ -128,8 +129,8 @@ def compute_complexity(data, testcases, codes):
         math_operations2.append(count_math_operations(codes[i]))
         Maxnested_blocks2.append(max_nested_blocks(codes[i]))
         unique_words2.append(count_unique_words_in_code(codes[i]))
-    accuracy = evaluation(data, testcases, code)
-    data = {
+    accuracy = evaluation(data_name, testcases, codes)
+    dataaa = {
         'CC': complexity2,
         'vocabulary': vocabulary2,
         'length': length2,
@@ -185,5 +186,6 @@ def compute_complexity(data, testcases, codes):
         'accuracy': accuracy
     }
 
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(dataaa)
     return df
+

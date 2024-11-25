@@ -4,9 +4,9 @@ def main():
     #datasets = ['HumanEval', 'mbpp', 'leetcode']
     #models = ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1']
     
-    data_name = input("Enter the dataset")
-    model_name = input("Enter the model")
-    train = input("Is it a train list? (If yes Enter 1 if not Enter 0)")
+    data_name = input("Enter the dataset: ")
+    model_name = input("Enter the model: ")
+    train = input("Is it a train list? (If yes Enter 1 if not Enter 0): ")
     codes=generate_code(data_name=data_name, model_name=model_name, train=int(train))
     if data_name == 'HumanEval' or data_name == 'leetcode':
         testcases=oringinal_test_cases(data_name=data_name)

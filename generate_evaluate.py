@@ -2,7 +2,7 @@ import re
 from datasets import load_dataset
 import os
 from openai import OpenAI
-api_key = input("Please enter your API Key ")
+api_key = input("Please enter your API Key: ")
 client = OpenAI(api_key=api_key)
 #llama 3 login:
 #huggingface-cli login

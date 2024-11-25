@@ -1,8 +1,8 @@
 # generating test cases
 import re
 from openai import OpenAI
-API_Key=input("Please enter your API key")
-client = OpenAI(api_key=API_Key)
+api_key = input("Please enter your API Key ")
+client = OpenAI(api_key=api_key)
 def generate_test(data):
     tests=[]
     for i in range(len(data)):

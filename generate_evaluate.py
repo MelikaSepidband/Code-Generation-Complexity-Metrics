@@ -2,6 +2,8 @@ import re
 from datasets import load_dataset
 import os
 from openai import OpenAI
+api_key = input("Please enter your API Key ")
+client = OpenAI(api_key=api_key)
 #llama 3 login:
 #huggingface-cli login
 import transformers
@@ -47,8 +49,6 @@ def generate_code(data_name, model_name, train=0):
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
         if model== 'gpt-4o':
-            api_key = input("Please enter your API Key ")
-            client = OpenAI(api_key=api_key)
             message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
             temperature=0.2
             max_tokens=1000
@@ -66,8 +66,6 @@ def generate_code(data_name, model_name, train=0):
             except:
                 code_block = res
         elif model == "gpt-3.5-turbo":
-                api_key = input("Please enter your API Key ")
-                client = OpenAI(api_key=api_key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -117,9 +115,7 @@ def generate_code(data_name, model_name, train=0):
     data2 = data['train']
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
-        if model== 'gpt-4o':
-                api_key = input("Please enter your API Key ")
-                client = OpenAI(api_key=api_key)             
+        if model== 'gpt-4o':       
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -137,8 +133,6 @@ def generate_code(data_name, model_name, train=0):
                 except:
                     code_block = res
         elif model == "gpt-3.5-turbo":
-                api_key = input("Please enter your API Key ")
-                client = OpenAI(api_key=api_key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000

@@ -2,8 +2,9 @@ import re
 from datasets import load_dataset
 import os
 from openai import OpenAI
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-if OPENAI_API_KEY is None:
+os.environ['API_KEY'] = 'your_api_key_here'
+api_key = os.getenv('API_KEY')
+if api_key is None:
     raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
 #llama 3 login:
 #huggingface-cli login

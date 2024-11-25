@@ -5,10 +5,14 @@ def main():
     #datasets = ['HumanEval', 'mbpp', 'leetcode']
     #models = ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1']
 
-    data_name = input("Enter the dataset")
-    model_name = input("Enter the model")
-    test_list = input("Enter the test list(the range in the dataset)")
-    iterations = input("Enter the number of iterations")
+    data_name = input("Enter the dataset: ")
+    model_name = input("Enter the model: ")
+    test_list = input("Enter the test list(the range in the dataset(e.g., range(1,20)): ")
+    try:
+        test_list = list(eval(test_list))
+    except Exception as e:
+        print("Invalid input. Please enter a valid range.")
+    iterations = input("Enter the number of iterations: ")
     final_codes={}
     for i in test_list:
         num, codes= iterative_generation(data_name = data_name,model_name= model_name, num_prompt = i, iterations=iterations)

@@ -93,7 +93,7 @@ def important_metrics(data_name, testcases, codes, train_list, test_list):
 def load_generated_testcases(data_name):
    data=load_data(data_name)
    if data_name == 'HumanEval':
-      from data.test_cases.he_testcases_5 import get_testcases
+      from results.generated_test_cases.he_testcases_5 import get_testcases
       tests2= get_testcases()
       final_test_cases_generated2 = []
       for a in range(164):
@@ -107,14 +107,14 @@ def load_generated_testcases(data_name):
           final_test_cases_generated2.append(test)
       return final_test_cases_generated2
    elif data_name == 'mbpp':
-      file_path = 'data/test_cases/mbpp_generated_testcases'
+      file_path = 'results/generated_test_cases/mbpp_generated_testcases'
 
       with open(file_path, 'rb') as file:
           tests = pickle.load(file)
       tests=tests[120:377]
       return tests
    elif data_name == 'leetcode':
-      from data.test_cases.leet_testcases import get_testcases
+      from results.generated_test_cases.leet_testcases import get_testcases
       test_cases_generated=get_testcases()
       for i in range(len(test_cases_generated)):
         a=test_cases_generated[i].find("```python")

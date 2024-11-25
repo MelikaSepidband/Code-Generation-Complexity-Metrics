@@ -2,7 +2,9 @@ import re
 from datasets import load_dataset
 import os
 from openai import OpenAI
-#client = OpenAI(api_key='API-Key')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+if OPENAI_API_KEY is None:
+    raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
 #llama 3 login:
 #huggingface-cli login
 import transformers
@@ -48,8 +50,8 @@ def generate_code(data_name, model_name, train=0):
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
         if model== 'gpt4o':
-            API_Key=input("Please enter your API key")
-            client = OpenAI(api_key=API_Key)
+            #API_Key=input("Please enter your API key")
+            #client = OpenAI(api_key=API_Key)
             message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
             temperature=0.2
             max_tokens=1000
@@ -67,8 +69,8 @@ def generate_code(data_name, model_name, train=0):
             except:
                 code_block = res
         elif model == "gpt-3.5-turbo":
-                API_Key=input("Please enter your API key")
-                client = OpenAI(api_key=API_Key)
+                #API_Key=input("Please enter your API key")
+                #client = OpenAI(api_key=API_Key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000

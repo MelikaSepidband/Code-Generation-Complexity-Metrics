@@ -153,8 +153,8 @@ def generate_code_feedback(model_name, assistant_prompt, user_prompt):
       max_tokens=1000
       frequency_penalty=0.0
 
-      api_key = input("Please enter your API Key: ")
-      client = OpenAI(api_key=api_key)
+      #api_key = input("Please enter your API Key: ")
+      #client = OpenAI(api_key=api_key)
       response = client.chat.completions.create(
           model="gpt-4o",
           messages = message,
@@ -179,8 +179,8 @@ def generate_code_feedback(model_name, assistant_prompt, user_prompt):
       max_tokens=1000
       frequency_penalty=0.0
 
-      api_key = input("Please enter your API Key: ")
-      client = OpenAI(api_key=api_key)
+      #api_key = input("Please enter your API Key: ")
+      #client = OpenAI(api_key=api_key)
       response = client.chat.completions.create(
           model="gpt-3.5-turbo",
           messages = message,
@@ -233,8 +233,8 @@ def generate_code_feedback_mbpp(model_name, assistant_prompt, num_prompt):
         max_tokens=1000
         frequency_penalty=0.0
 
-        api_key = input("Please enter your API Key: ")
-        client = OpenAI(api_key=api_key)
+        #api_key = input("Please enter your API Key: ")
+        #client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
             model="gpt-4o",
             messages = message,
@@ -270,8 +270,8 @@ def generate_code_feedback_mbpp(model_name, assistant_prompt, num_prompt):
         max_tokens=1000
         frequency_penalty=0.0
 
-        api_key = input("Please enter your API Key: ")
-        client = OpenAI(api_key=api_key)
+        #api_key = input("Please enter your API Key: ")
+        #client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages = message,

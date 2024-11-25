@@ -3,7 +3,7 @@ from generate_evaluate import *
 
 def main():
     #datasets = ['HumanEval', 'mbpp', 'leetcode']
-    #models = ['gpt4o', 'gpt-3.5-turbo', 'llama3.1']
+    #models = ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1']
 
     data_name = input("Enter the dataset")
     model_name = input("Enter the model")

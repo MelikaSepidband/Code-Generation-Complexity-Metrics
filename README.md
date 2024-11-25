@@ -39,4 +39,24 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/MelikaSepidband/Code-Generation-Complexity-Metrics
-cd Code-Generation-Complexity-Metrics
+
+If you want to create the table of complexity metrics of the codes and the accuracy of the codes run the "Run_Complexity_Accuracy_Table.py" file. with this command:
+```bash
+python Code-Generation-Complexity-Metrics/Run_Complexity_Accuracy_Table.py
+
+If you want to create the barplot for the complexity metrics of the codes run the "Run_Distribution_BarPlot.py" file. with this command:
+```bash
+python Code-Generation-Complexity-Metrics/Run_Distribution_BarPlot.py
+
+If you want to run the feedback-based algorithm run the "Feedback_based_method.py" file. with this command:
+```bash
+python Code-Generation-Complexity-Metrics/Run_Feedback_Method.py
+
+First you need to enter your API KEY for openai.
+Then you need to enter the dataset you want to use from this list: ['HumanEval', 'mbpp', 'leetcode']
+Then you need to enter the model you want to use from this list: ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1']
+
+If you want to use llama3.1 model you should login to huggingface and enter your Token with the following command:
+```bash
+huggingface-cli login
+

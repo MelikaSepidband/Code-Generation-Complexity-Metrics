@@ -50,7 +50,7 @@ def generate_code(data_name, model_name, train=0):
             os.environ['API_KEY'] = input("Please enter your API Key ")
             api_key = os.getenv('API_KEY')
             if api_key is None:
-                #raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
+                raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
             client = OpenAI(api_key=api_key)
             message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
             temperature=0.2

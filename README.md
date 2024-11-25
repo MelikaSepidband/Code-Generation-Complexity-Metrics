@@ -39,6 +39,7 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/MelikaSepidband/Code-Generation-Complexity-Metrics
+```
 
 If you want to create the table of complexity metrics of the codes and the accuracy of the codes run the "Run_Complexity_Accuracy_Table.py" file. with this command:
 ```bash

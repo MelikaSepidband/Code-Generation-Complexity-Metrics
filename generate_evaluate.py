@@ -24,8 +24,8 @@ def load_data(name):
     return data
 
 def load_model(name):
-    if name == 'gpt4o':
-       model = 'gpt4o'
+    if name == 'gpt-4o':
+       model = 'gpt-4o'
     elif name == "gpt-3.5-turbo":
        model = "gpt-3.5-turbo"
     elif name == "llama3.1":
@@ -46,11 +46,8 @@ def generate_code(data_name, model_name, train=0):
        data2 = data['train']
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
-        if model== 'gpt4o':
-            os.environ['API_KEY'] = input("Please enter your API Key ")
-            api_key = os.getenv('API_KEY')
-            if api_key is None:
-                raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
+        if model== 'gpt-4o':
+            api_key = input("Please enter your API Key ")
             client = OpenAI(api_key=api_key)
             message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
             temperature=0.2
@@ -69,10 +66,7 @@ def generate_code(data_name, model_name, train=0):
             except:
                 code_block = res
         elif model == "gpt-3.5-turbo":
-                os.environ['API_KEY'] = 'your_api_key_here'
-                api_key = os.getenv('API_KEY')
-                if api_key is None:
-                    raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
+                api_key = input("Please enter your API Key ")
                 client = OpenAI(api_key=api_key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
@@ -123,12 +117,9 @@ def generate_code(data_name, model_name, train=0):
     data2 = data['train']
     for i in range(len(data2)):
         user_prompt = data2['prompt'][i]
-        if model== 'gpt4o':
-                os.environ['API_KEY'] = 'your_api_key_here'
-                api_key = os.getenv('API_KEY')
-                if api_key is None:
-                    raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
-                client = OpenAI(api_key=api_key)              
+        if model== 'gpt-4o':
+                api_key = input("Please enter your API Key ")
+                client = OpenAI(api_key=api_key)             
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2
                 max_tokens=1000
@@ -146,10 +137,7 @@ def generate_code(data_name, model_name, train=0):
                 except:
                     code_block = res
         elif model == "gpt-3.5-turbo":
-                os.environ['API_KEY'] = 'your_api_key_here'
-                api_key = os.getenv('API_KEY')
-                if api_key is None:
-                    raise ValueError("Please set your OpenAI API key as an environment variable 'OPENAI_API_KEY'.")
+                api_key = input("Please enter your API Key ")
                 client = OpenAI(api_key=api_key)
                 message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
                 temperature=0.2

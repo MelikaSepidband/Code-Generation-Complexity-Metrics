@@ -2,6 +2,8 @@ import shap
 import numpy as np
 import re
 import pickle
+import os
+import json
 from sklearn.linear_model import LogisticRegression
 from complexity_accuracy import *
 
@@ -140,7 +142,7 @@ def load_generated_testcases(data_name):
       return test_cases_generated    
 
 def generate_code_feedback(model_name, assistant_prompt, user_prompt):
-    # HumanEval and LeetCode
+    # HumanEval and LeetCode and BigCodeBench
     model = load_model(model_name)
     if model== 'gpt-4o':
       gpt_assistant_prompt = assistant_prompt
@@ -217,6 +219,32 @@ def generate_code_feedback(model_name, assistant_prompt, user_prompt):
       except:
         code_block = res
       return code_block
+    elif model== 'o3-mini':
+        gpt_assistant_prompt = assistant_prompt
+    
+        gpt_user_prompt = user_prompt
+        gpt_prompt = gpt_assistant_prompt, gpt_user_prompt
+    
+        message=[{"role": "assistant", "content": gpt_assistant_prompt}, {"role": "user", "content": gpt_user_prompt}]
+        temperature=0.2
+        max_tokens=2000
+        frequency_penalty=0.0
+    
+        #api_key = input("Please enter your API Key: ")
+        #client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
+            model="o3-mini",
+            messages = message,
+            #temperature=temperature,
+            max_completion_tokens=max_tokens,
+            frequency_penalty=frequency_penalty
+        )
+        res=response.choices[0].message.content
+        try:
+          code_block = re.search(r"```python(.*?)```", res, re.DOTALL).group(1).strip()
+        except:
+          code_block = res
+        return code_block
     
 def generate_code_feedback_mbpp(model_name, assistant_prompt, num_prompt):
     #MBPP
@@ -353,6 +381,12 @@ def evaluate_code(data_name,num_prompt, code):
     p=pass_at_k['pass@1']
     if p!=0:
       return p
+  elif data_name == 'BigCodeBench':
+    os.chdir("/content/bigcodebench/bigcodebench")
+    from evaluate import check_correctness, evaluate
+    ret=check_correctness(completion_id=data[num_prompt]['task_id'], problem= data[num_prompt], solution= code, max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+    if ret['base'][0] != 'fail':
+        return "yes"
 
   else:
     try:
@@ -511,3 +545,45 @@ def iterative_generation(data_name,model_name, num_prompt, iterations=6):
             codes.append(code)
       print("not passed: ", s_all[num_prompt])
       return s_all[num_prompt], codes
+        
+    elif data_name == 'BigCodeBench':
+        # Open the JSONL file and read line by line
+        with open("gpt-4o--bigcodebench-complete--openai-0-1-sanitized-calibrated.jsonl", "r", encoding="utf-8") as file:
+            data2 = [json.loads(line) for line in file]
+        data3=[]
+        for i in range(len(data2)):
+          if data2[i]['task_id'] in data['task_id']:
+              data3.append(data2[i])
+        imports=[]
+        for i in range(148):
+          ff=data3[i]['solution'].find("def task_func")
+          imp=data3[i]['solution'][:ff]
+          imports.append(imp)
+        assistant_prompt= "please complete this Python function."
+        user_prompt = data[num_prompt]['complete_prompt']
+        codes=[]
+        for _ in range(iterations):
+            if _==0:
+              code= data3[num_prompt]['solution']
+            else:
+              code = generate_code(assistant_prompt, user_prompt)
+              code = imports[num_prompt] +"\n"+ code
+            #print("Generated Code:\n", code)
+    
+            metrics = evaluate_code(num_prompt,code)
+            #print("Code Metrics:\n", metrics)
+            if metrics=="yes":
+               print(f"passed in iteration {_}: ",num_prompt)
+               #return "pass", num_prompt, code
+               codes.append(code)
+               return num_prompt, codes
+               #return num_prompt, code
+            else:
+               feedback = generate_feedback(metrics)
+               assistant_prompt = f"Please complete the Python function and {feedback}."
+               codes.append(code)
+               #assistant_prompt= "please complete this Python function"
+        print("not passed: ", num_prompt)
+        #return "not_pass", num_prompt, code
+        #return num_prompt, code
+        return num_prompt, codes

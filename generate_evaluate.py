@@ -21,6 +21,8 @@ def load_data(name):
         data = load_dataset("mbpp", "sanitized")
     elif name == 'leetcode':
         data = load_dataset("greengerong/leetcode")
+    elif name == 'BigCodeBench':
+        data = load_dataset("bigcode/bigcodebench-hard")['v0.1.3']
     else:
         raise ValueError("Unsupported dataset name")
     return data
@@ -32,6 +34,8 @@ def load_model(name):
        model = "gpt-3.5-turbo"
     elif name == "llama3.1":
        model = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+    elif name == 'o3-mini':
+        model = 'o3-mini'
     else:
         raise ValueError("Unsupported model name")
     return model   
@@ -46,8 +50,13 @@ def generate_code(data_name, model_name, train=0):
        data2= data['test']
     elif data_name == 'leetcode':
        data2 = data['train']
+    elif data_name == 'BigCodeBench':
+       data2 = data
     for i in range(len(data2)):
-        user_prompt = data2['prompt'][i]
+        if data_name == 'BigCodeBench':
+            user_prompt = data2['complete_prompt'][i]
+        else:
+            user_prompt = data2['prompt'][i]
         if model== 'gpt-4o':
             message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
             temperature=0.2
@@ -110,6 +119,23 @@ def generate_code(data_name, model_name, train=0):
                     code_block=re.search(r"```python(.*?)```", a, re.DOTALL).group(1).strip()
                 except:
                     code_block=a
+        elif model== 'o3-mini':
+            message=[{"role": "assistant", "content": assistant_prompt}, {"role": "user", "content": user_prompt}]
+            temperature=0.2
+            max_tokens=2000
+            frequency_penalty=0.0
+            response = client.chat.completions.create(
+            model="o3-mini",
+            messages = message,
+            #temperature=temperature,
+            max_tokens=max_tokens,
+            frequency_penalty=frequency_penalty
+            )
+            res=response.choices[0].message.content
+            try:
+                code_block = re.search(r"```python(.*?)```", res, re.DOTALL).group(1).strip()
+            except:
+                code_block = res
 
    elif train ==1: # just when data is mbpp
     data2 = data['train']
@@ -215,6 +241,8 @@ def oringinal_test_cases(data_name):
             function_name = "function_name"
             test_case = generate_test_cases(function_name, example)
             final_test_cases.append(test_case)
+    elif data_name == 'BigCodeBench':
+        final_test_cases = []
     
     return final_test_cases
 
@@ -253,4 +281,13 @@ def evaluation(data_name, testcases, code):
                     accuracy.append(0)
         except:
             accuracy.append(0)
+    elif data_name == 'BigCodeBench':
+        os.chdir("/content/bigcodebench/bigcodebench")
+        from evaluate import check_correctness, evaluate
+        for j in range(len(data)):
+          ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution=code[j], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+          if ret['base'][0] != 'fail':
+              accuracy.append(1)
+          else:
+              accuracy.append(0)
     return accuracy    

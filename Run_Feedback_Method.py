@@ -1,9 +1,10 @@
 from Feedback_based_method import *
 from generate_evaluate import *
+import os
 
 def main():
-    #datasets = ['HumanEval', 'mbpp', 'leetcode']
-    #models = ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1']
+    #datasets = ['HumanEval', 'mbpp', 'leetcode', 'BigCodeBench']
+    #models = ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1', 'o3-mini']
 
     data_name = input("Enter the dataset: ")
     model_name = input("Enter the model: ")
@@ -544,6 +545,103 @@ def main():
                 s+=1
 
         acc_all.append(s/len(test_list))
+    elif data_name == 'BigCodeBench':
+        data= load_data(data_name)
+        os.chdir("/content/bigcodebench/bigcodebench")
+        from evaluate import check_correctness, evaluate
+        acc_all=[]
+        # iteration 0
+        s=0
+        for j in test_list:
+            ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][0], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            if ret['base'][0] != 'fail':
+                s+=1
+        acc_all.append(s/len(test_list))
+        # iteration 1
+        s=0
+        for j in test_list:
+            try:
+                ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][1], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            except:
+                ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][0], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            if ret['base'][0] != 'fail':
+                s+=1
+        acc_all.append(s/len(test_list))
+
+        # iteration 2
+        s=0
+        for j in test_list:
+            try:
+                ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][2], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            except:
+                try:
+                    ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][1], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                except:
+                    ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][0], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            if ret['base'][0] != 'fail':
+                s+=1
+        acc_all.append(s/len(test_list))
+
+        # iteration 3
+        s=0
+        for j in test_list:
+            try:
+                ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][3], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            except:
+                try:
+                    ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][2], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                except:
+                    try:
+                        ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][1], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                    except:
+                        ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][0], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            if ret['base'][0] != 'fail':
+                s+=1
+        acc_all.append(s/len(test_list))
+
+        # iteration 4
+        s=0
+        for j in test_list:
+            try:
+                ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][4], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            except:
+                try:
+                    ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][3], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                except:
+                    try:
+                        ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][2], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                    except:
+                        try:
+                            ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][1], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                        except:
+                            ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][0], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            if ret['base'][0] != 'fail':
+                s+=1
+        acc_all.append(s/len(test_list))
+        # iteration 5
+        s=0
+        for j in test_list:
+            try:
+                ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][5], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            except:
+                try:
+                 ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][4], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                except:
+                 try:
+                    ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][3], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                 except:
+                    try:
+                     ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][2], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                    except:
+                     try:
+                        ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][1], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+                     except:
+                        ret=check_correctness(completion_id=data[j]['task_id'], problem= data[j], solution= final_codes[j][0], max_as_limit=30*1024, max_data_limit= 30*1024, max_stack_limit= 10)
+            if ret['base'][0] != 'fail':
+                s+=1
+        acc_all.append(s/len(test_list))
+
+        return acc_all
 
 if __name__ == "__main__":
     acc_all= main()

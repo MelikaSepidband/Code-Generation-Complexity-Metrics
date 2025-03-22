@@ -26,9 +26,9 @@ Our main goal is to guide LLMs toward generating correct code by understanding a
 ## Contributions
 - **Demonstrated the Correlation:** Showed a significant correlation between code complexity metrics and the success of code generation by LLMs.
 
-- **Introduced a Novel Method:** Developed an iterative feedback mechanism based on complexity metrics to guide LLMs in producing correct code.
+- **Introduced a Novel Method:** Developed an iterative feedback mechanism based on complexity metrics to guide LLMs in producing correct code both in standalone LLM prompting and within an agent-based framework (Reflexion).
 
-- **Comprehensive Experiments:** Validated our approach through extensive experiments across multiple datasets (HumanEval, MBPP-sanitized, LeetCode) and LLMs (GPT-4o, GPT-3.5 Turbo, Llama 3.1).
+- **Comprehensive Experiments:** Validated our approach through extensive experiments across multiple datasets (HumanEval, MBPP-sanitized, LeetCode, BigCodeBench) and LLMs (GPT-4o, GPT-3.5 Turbo, Llama 3.1, GPT-o3-mini).
 
 ## Conclusion
 By leveraging code complexity metrics as feedback, we can effectively guide LLMs to generate more accurate and efficient code. This approach not only enhances the success rate of code generation but also contributes to the development of more reliable and robust AI coding assistants.
@@ -58,12 +58,15 @@ python Code-Generation-Complexity-Metrics/Run_Feedback_Method.py
 
 First you need to enter your API KEY for openai.
 
-Then you need to enter the dataset you want to use from this list: ['HumanEval', 'mbpp', 'leetcode']
+Then you need to enter the dataset you want to use from this list: ['HumanEval', 'mbpp', 'leetcode', 'BigCodeBench]
 
-Then you need to enter the model you want to use from this list: ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1']
+Then you need to enter the model you want to use from this list: ['gpt-4o', 'gpt-3.5-turbo', 'llama3.1', 'o3-mini']
 
 If you want to use llama3.1 model you should login to huggingface and enter your Token with the following command:
 ```bash
 huggingface-cli login
 ```
-
+If you want to use the BigCodeBench dataset, you should clone their GitHub repository:
+```bash
+git clone https://github.com/bigcode-project/bigcodebench.git
+```

@@ -3,3 +3,6 @@ datasets
 openai
 evaluate
 shap
+bigcodebench --upgrade
+packaging ninja
+flash-attn --no-build-isolation
